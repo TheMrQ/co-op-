@@ -1,177 +1,645 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Co-Op Campaign | Theo & Jess</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Theo & Jess 🖤</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+    <style>
+        /* --- THEME CONFIG --- */
+        :root {
+            --bg-deep: #050505;
+            --panel-bg: rgba(20, 20, 20, 0.9);
+            --border-color: #333;
+            --p1-color: #00f3ff;
+            --p2-color: #b026ff;
+            --text-main: #fff;
+            --text-dim: #888;
+            --active-green: #00ff41;
+            --quest-gold: #ffd700;
         }
 
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
             min-height: 100vh;
-            background-image: radial-gradient(circle at 50% -20%, #1e293b, #0f172a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
+            background: radial-gradient(circle at 50% 50%, #1a0b2e 0%, var(--bg-deep) 100%);
         }
 
-        .dashboard {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            padding: 3rem 4rem;
-            border-radius: 16px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        /* --- BACKGROUND ANIMATION --- */
+        .emoji-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.08;
+            pointer-events: none;
+            font-size: 4rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            overflow: hidden;
+        }
+
+        .emoji-bg span {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .emoji-bg span:nth-child(even) {
+            animation-duration: 8s;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .main-hub {
+            width: 90%;
+            max-width: 800px;
             text-align: center;
-            border: 1px solid #334155;
+            z-index: 2;
+            padding: 40px 0;
+            position: relative;
         }
 
         h1 {
-            font-size: 1rem;
-            letter-spacing: 4px;
-            color: #94a3b8;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
             text-transform: uppercase;
-            margin-bottom: 3rem;
-            font-weight: 500;
+            letter-spacing: 2px;
+            background: -webkit-linear-gradient(0deg, var(--p1-color), #fff, var(--p2-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(176, 38, 255, 0.3);
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
         }
 
-        .players {
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Press Start 2P';
+            line-height: 1.8;
+        }
+
+        .status-active {
+            color: var(--active-green);
+            text-shadow: 0 0 10px var(--active-green);
+            animation: pulseGreen 1.5s infinite alternate;
+        }
+
+        @keyframes pulseGreen {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+
+        /* --- UPTIME TRACKER --- */
+        .uptime-container {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--text-dim);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .uptime-label {
+            color: var(--p1-color);
+            font-family: 'Press Start 2P';
+            font-size: 0.7rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+        }
+
+        .big-days-container {
             display: flex;
-            gap: 3rem;
             justify-content: center;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .big-number {
+            font-family: 'Press Start 2P';
+            font-size: 2.2rem;
+            color: var(--p2-color);
+            text-shadow: 3px 3px 0 #000;
+            line-height: 1;
+        }
+
+        .big-text {
+            font-family: 'Press Start 2P';
+            font-size: 2.2rem;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .small-time {
+            font-family: 'Press Start 2P';
+            font-size: 0.8rem;
+            color: #ccc;
+            letter-spacing: 1px;
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+
+        .small-num { color: var(--p2-color); }
+
+        /* --- PLAYER CARDS --- */
+        .player-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 40px;
         }
 
         .player-card {
-            background: #0f172a;
-            padding: 2.5rem;
-            border-radius: 12px;
-            min-width: 200px;
-            border: 1px solid #334155;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
             position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-bottom-width: 4px;
+            border-bottom-style: solid;
+            transition: 0.3s;
         }
 
-        .player-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        .player-card.p1 { border-bottom-color: var(--p1-color); }
+        .player-card.p2 { border-bottom-color: var(--p2-color); }
+
+        .player-header {
+            display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;
         }
 
-        /* Player 1 Accent */
-        .player-card:nth-child(1)::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: #3b82f6;
-            box-shadow: 0 0 15px #3b82f6;
+        .player-header span, .player-name {
+            font-family: 'Press Start 2P'; font-size: 0.9rem; color: #fff; line-height: 1;
         }
 
-        /* Player 2 Accent */
-        .player-card:nth-child(2)::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: #ec4899;
-            box-shadow: 0 0 15px #ec4899;
+        .location-tag {
+            font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;
         }
 
-        .name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+        .clock-display {
+            font-size: 1.8rem; font-weight: 700; font-family: 'Rajdhani', monospace; color: #fff;
         }
 
-        .status {
-            font-size: 0.85rem;
-            color: #10b981;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
+        /* --- COMMAND GRID --- */
+        .command-grid {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            margin-bottom: 40px;
+            width: 100%;
         }
 
-        .status::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: #10b981;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #10b981;
-        }
-
-        .time {
-            font-size: 2.5rem;
-            font-weight: 300;
-            font-variant-numeric: tabular-nums;
-            color: #ffffff;
-        }
-
-        .label {
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-top: 0.75rem;
+        .comfort-btn {
+            background: transparent;
+            border: 2px solid #ff2a6d;
+            color: #ff2a6d;
+            padding: 15px 25px;
+            font-family: 'Press Start 2P';
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 10px rgba(255, 42, 109, 0.1);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .comfort-btn:hover {
+            background: #ff2a6d; color: #000;
+            box-shadow: 0 0 25px #ff2a6d;
+            transform: scale(1.02);
+        }
+
+        /* --- QUEST LOG --- */
+        .quest-box {
+            background: #000; border: 2px solid var(--text-dim); border-radius: 4px;
+            padding: 20px; text-align: left; margin-bottom: 40px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .quest-title {
+            font-family: 'Press Start 2P'; color: var(--quest-gold); font-size: 0.8rem;
+            margin-bottom: 20px; text-align: center; text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        .quest-item {
+            display: flex; align-items: center; margin-bottom: 12px;
+            font-family: 'Rajdhani', monospace; font-size: 1.1rem; color: #ccc; transition: 0.3s;
+        }
+
+        .quest-item.completed { color: #555; text-decoration: line-through; }
+
+        .quest-checkbox {
+            appearance: none; width: 15px; height: 15px; border: 2px solid var(--p1-color);
+            margin-right: 15px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center;
+        }
+
+        .quest-checkbox:checked { background: var(--p1-color); }
+        .quest-checkbox:checked::after { content: '✔'; color: #000; font-size: 10px; font-weight: bold; }
+
+        /* --- MINIGAME SECTION --- */
+        .game-area {
+            border-top: 1px solid #333; padding-top: 30px; width: 100%;
+        }
+
+        .game-title {
+            font-family: 'Press Start 2P'; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 15px;
+        }
+
+        #gameCanvas {
+            background: #000; border: 2px solid var(--p1-color);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+            display: block; margin: 0 auto; border-radius: 4px; cursor: pointer;
+        }
+
+        .game-msg {
+            margin-top: 10px; font-size: 0.8rem; color: #666; font-family: 'Press Start 2P';
+        }
+
+        /* --- CHEAT CODE RAIN --- */
+        .rain-container {
+            position: fixed; top: -50px; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9998; overflow: hidden; display: none;
+        }
+
+        .rain-drop {
+            position: absolute; top: -20px; font-size: 2rem; animation: fall linear forwards;
+        }
+
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        /* --- MOBILE ADJUSTMENTS --- */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.1rem; margin-bottom: 10px; }
+            .status-active { display: block; margin-top: 5px; }
+            .subtitle { font-size: 0.7rem; letter-spacing: 1px; }
+            .big-number, .big-text { font-size: 1.5rem; }
+            .small-time { font-size: 0.65rem; }
+            .player-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .clock-display { font-size: 1.4rem; }
+            .player-header span, .player-name { font-size: 0.6rem; }
+            #gameCanvas { width: 100%; }
+            .main-hub { padding-top: 20px; }
         }
     </style>
 </head>
+
 <body>
 
-    <div class="dashboard">
-        <h1>Active Co-Op Campaign</h1>
-        <div class="players">
-            <div class="player-card">
-                <div class="name">Theo</div>
-                <div class="status">Connected</div>
-                <div class="time" id="theo-time">--:--</div>
-                <div class="label">Local Time</div>
+    <div class="emoji-bg" id="emoji-container">
+        <span>🖤</span> <span>👾</span> <span>💀</span> <span>🎮</span>
+        <span>🕷️</span> <span>🗡️</span> <span>🖤</span> <span>👾</span>
+    </div>
+
+    <div id="rain-box" class="rain-container"></div>
+
+    <div class="main-hub">
+        
+        <h1 onclick="triggerMobileCheat()">Server: T & J</h1>
+
+        <div class="subtitle">
+            CO-OP CAMPAIGN STATUS: <span class="status-active">[ ACTIVE ]</span>
+        </div>
+
+        <div class="uptime-container">
+            <span class="uptime-label">🎮 Connection Uptime 🎮</span>
+
+            <div id="uptime-days" class="big-days-container">
+                <span class="big-number">0</span>
+                <span class="big-text">DAYS</span>
             </div>
 
-            <div class="player-card">
-                <div class="name">Jess</div>
-                <div class="status">Connected</div>
-                <div class="time" id="jess-time">--:--</div>
-                <div class="label">Local Time</div>
+            <div id="uptime-time" class="small-time">0 HRS 0 MINS 0 SECS</div>
+        </div>
+
+        <div class="player-grid">
+            <div class="player-card p1">
+                <div class="player-header">
+                    <span>VN</span>
+                    <div class="player-name">THEO</div>
+                </div>
+                <div class="location-tag">Base: Vietnam</div>
+                <div class="clock-display" id="clock-theo">--:--</div>
             </div>
+
+            <div class="player-card p2">
+                <div class="player-header">
+                    <span>US</span>
+                    <div class="player-name">JESS</div>
+                </div>
+                <div class="location-tag">Base: America</div>
+                <div class="clock-display" id="clock-jess">--:--</div>
+            </div>
+        </div>
+
+        <div class="command-grid">
+            <a href="comfort.html" class="comfort-btn">
+                ♥ COMFORT PROTOCOL ♥
+            </a>
+        </div>
+
+        <div class="quest-box">
+            <div class="quest-title">📜 Daily Quests</div>
+
+            <div class="quest-item">
+                <input type="checkbox" class="quest-checkbox" disabled>
+                <span>🛡️ Main: Close the Distance</span>
+            </div>
+
+            <div class="quest-item">
+                <input type="checkbox" class="quest-checkbox" id="q1" onchange="toggleQuest('q1')">
+                <span>💧 Drink Water</span>
+            </div>
+
+            <div class="quest-item">
+                <input type="checkbox" class="quest-checkbox" id="q2" onchange="toggleQuest('q2')">
+                <span>📞 Call / Voice Note</span>
+            </div>
+
+            <div class="quest-item">
+                <input type="checkbox" class="quest-checkbox" id="q3" onchange="toggleQuest('q3')">
+                <span>📸 Send Cute Pic</span>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="game-title">MINIGAME: JUMP THE LAG</div>
+            <canvas id="gameCanvas" width="600" height="150"></canvas>
+            <div class="game-msg">HIGH SCORE: <span id="high-score">0</span>km</div>
+            <div class="game-msg">Press SPACE or TAP to Jump</div>
         </div>
     </div>
 
     <script>
-        function updateTime() {
-            const now = new Date();
-            
-            const timeOptions = { hour: '2-digit', minute: '2-digit' };
-            
-            // Update Theo's Time (Current Local Time)
-            document.getElementById('theo-time').innerText = now.toLocaleTimeString([], timeOptions);
-            
-            // Update Jess's Time (11 hours behind)
-            // 7:15 PM to 8:15 AM is exactly an 11-hour difference.
-            const jessDate = new Date(now.getTime() - (11 * 60 * 60 * 1000));
-            document.getElementById('jess-time').innerText = jessDate.toLocaleTimeString([], timeOptions);
-        }
-        
-        // Initialize and update every second to keep the colon blinking/accurate
-        setInterval(updateTime, 1000);
-        updateTime();
-    </script>
+        // --- CONFIGURATION ---
+        // Set to March 21st, 2026 at 2:00 AM (Vietnam Standard Time / +07:00)
+        const startDate = new Date('2026-03-21T02:00:00+07:00');
 
+        function updateSystem() {
+            const now = new Date();
+            const diff = now - startDate;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('uptime-days').innerHTML =
+                `<span class="big-number">${days}</span> <span class="big-text">DAYS</span>`;
+
+            document.getElementById('uptime-time').innerHTML =
+                `<span class="small-num">${hours}</span> HRS ` +
+                `<span class="small-num">${minutes}</span> MINS ` +
+                `<span class="small-num">${seconds}</span> SECS`;
+
+            const timeOpt = { hour: '2-digit', minute: '2-digit', hour12: true };
+            
+            // Theo's local time (system default)
+            document.getElementById('clock-theo').innerText = now.toLocaleTimeString('en-US', timeOpt);
+            
+            // Jess's time (Exactly 11 hours behind local time)
+            const jessDate = new Date(now.getTime() - (11 * 60 * 60 * 1000));
+            document.getElementById('clock-jess').innerText = jessDate.toLocaleTimeString('en-US', timeOpt);
+        }
+
+        setInterval(updateSystem, 1000);
+        updateSystem();
+
+        // --- QUEST LOG ---
+        function toggleQuest(id) {
+            const checkbox = document.getElementById(id);
+            const parent = checkbox.parentElement;
+
+            if (checkbox.checked) {
+                parent.classList.add('completed');
+                localStorage.setItem(id, 'done');
+            } else {
+                parent.classList.remove('completed');
+                localStorage.removeItem(id);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            ['q1', 'q2', 'q3'].forEach(id => {
+                if (localStorage.getItem(id) === 'done') {
+                    document.getElementById(id).checked = true;
+                    document.getElementById(id).parentElement.classList.add('completed');
+                }
+            });
+        });
+
+        // --- CHEAT CODE ---
+        let keySequence = [];
+        const secretCode = "love";
+
+        document.addEventListener('keydown', (e) => {
+            keySequence.push(e.key.toLowerCase());
+            if (keySequence.length > secretCode.length) keySequence.shift();
+
+            if (keySequence.join('') === secretCode) {
+                triggerRain();
+            }
+        });
+
+        let tapCount = 0;
+        let tapTimer;
+        function triggerMobileCheat() {
+            tapCount++;
+            clearTimeout(tapTimer);
+            tapTimer = setTimeout(() => { tapCount = 0; }, 1000); 
+
+            if (tapCount === 5) {
+                triggerRain();
+                tapCount = 0;
+            }
+        }
+
+        function triggerRain() {
+            const rainBox = document.getElementById('rain-box');
+            rainBox.style.display = 'block';
+
+            const emojis = ['❤️', '🖤', '👾', '🎮', '💀', '💋'];
+
+            for (let i = 0; i < 50; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('rain-drop');
+                drop.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                drop.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+
+                rainBox.appendChild(drop);
+                setTimeout(() => drop.remove(), 4000);
+            }
+            setTimeout(() => rainBox.style.display = 'none', 4000);
+        }
+
+        // --- MINIGAME ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let highScore = localStorage.getItem('dinoHighScore') || 0;
+        document.getElementById('high-score').innerText = highScore;
+
+        let gameRunning = false;
+        let score = 0;
+
+        let isMobile = window.innerWidth < 600;
+        let speed = isMobile ? 14 : 6;
+        let gravity = isMobile ? 0.9 : 0.5;
+        let jumpPower = isMobile ? -13 : -10;
+
+        let player = { x: 50, y: 110, w: 20, h: 20, dy: 0, jumpPower: jumpPower, grounded: true };
+        let obstacles = [];
+        let frame = 0;
+
+        function drawPlayer() {
+            const p1Color = getComputedStyle(document.documentElement).getPropertyValue('--p1-color').trim();
+            ctx.fillStyle = p1Color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = p1Color;
+            ctx.fillRect(player.x, player.y, player.w, player.h);
+            ctx.shadowBlur = 0;
+        }
+
+        function drawObstacles() {
+            const p2Color = getComputedStyle(document.documentElement).getPropertyValue('--p2-color').trim();
+            obstacles.forEach(obs => {
+                if (obs.type === 'fly') ctx.fillStyle = '#ff2a6d';
+                else if (obs.type === 'wide') ctx.fillStyle = '#00ff41';
+                else ctx.fillStyle = p2Color;
+
+                ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+            });
+        }
+
+        function updateGame() {
+            if (!gameRunning) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            player.dy += gravity;
+            player.y += player.dy;
+
+            if (player.y > 110) {
+                player.y = 110;
+                player.dy = 0;
+                player.grounded = true;
+            }
+
+            frame++;
+            let spawnRate = isMobile ? 40 : 90;
+
+            if (frame % spawnRate === 0) {
+                let typeSeed = Math.random();
+                let newObs = { x: canvas.width, y: 110, w: 20, h: 20, type: 'std' };
+
+                if (typeSeed > 0.7) {
+                    newObs.type = 'fly'; newObs.y = 90; newObs.h = 15; newObs.w = 15;
+                } else if (typeSeed > 0.4) {
+                    newObs.type = 'wide'; newObs.y = 115; newObs.w = 30; newObs.h = 15;
+                } else {
+                    newObs.y = 110; newObs.h = 20;
+                }
+                obstacles.push(newObs);
+            }
+
+            obstacles.forEach((obs, index) => {
+                obs.x -= speed;
+
+                if (player.x < obs.x + obs.w && player.x + player.w > obs.x && player.y < obs.y + obs.h && player.h + player.y > obs.y) {
+                    gameOver();
+                }
+
+                if (obs.x + obs.w < 0) {
+                    obstacles.splice(index, 1);
+                    score += 10;
+                }
+            });
+
+            drawPlayer();
+            drawObstacles();
+
+            ctx.fillStyle = '#fff';
+            ctx.font = '10px "Press Start 2P"';
+            ctx.fillText("DISTANCE: " + score + "km", 10, 20);
+
+            requestAnimationFrame(updateGame);
+        }
+
+        function jump() {
+            if (!gameRunning) {
+                resetGame();
+            } else if (player.grounded) {
+                player.dy = player.jumpPower;
+                player.grounded = false;
+            }
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('dinoHighScore', highScore);
+                document.getElementById('high-score').innerText = highScore;
+            }
+            ctx.fillStyle = 'rgba(0,0,0,0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#fff';
+            ctx.fillText("GAME OVER", 250, 60);
+            ctx.fillText("Score: " + score, 260, 80);
+            ctx.fillText("Tap to Retry", 245, 100);
+        }
+
+        function resetGame() {
+            gameRunning = true;
+            score = 0;
+            obstacles = [];
+            player.y = 110;
+            player.dy = 0;
+            frame = 0;
+            updateGame();
+        }
+
+        document.addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); jump(); } });
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); });
+        canvas.addEventListener('mousedown', (e) => { e.preventDefault(); jump(); });
+
+        ctx.fillStyle = '#fff';
+        ctx.font = '12px "Press Start 2P"';
+        ctx.fillText("CLICK TO START", 230, 80);
+    </script>
 </body>
+
 </html>
